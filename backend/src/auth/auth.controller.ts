@@ -19,16 +19,16 @@ export class AuthController {
     private readonly userService: UsersService,
   ) {}
 
-  @Post('register')
-  register(
+  @Post('sign-up')
+  signUp(
     @Body() registerUserDto: RegisterUserDto,
-  ): Promise<{ access_token: string }> {
-    return this.authService.register(registerUserDto);
+  ): Promise<{ accessToken: string }> {
+    return this.authService.signUp(registerUserDto);
   }
 
-  @Post('login')
-  login(@Body() loginUserDto: LoginUserDto): Promise<{ access_token: string }> {
-    return this.authService.login(loginUserDto);
+  @Post('sign-in')
+  signIn(@Body() loginUserDto: LoginUserDto): Promise<{ accessToken: string }> {
+    return this.authService.signIn(loginUserDto);
   }
 
   @UseGuards(JwtAuthGuard)

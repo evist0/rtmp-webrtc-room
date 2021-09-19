@@ -1,29 +1,38 @@
-import DefaultLayout from "../layout/default";
-import { Button, Pane, TextInputField } from "evergreen-ui";
 import { ChangeEvent, useContext, useRef } from "react";
-import { RootStore } from "../mobx/store";
-import { StoreContext } from "../context/store-context";
-import { LoginDto } from "../models/auth/login.dto";
+import { Button, Heading, Pane, TextInputField } from "evergreen-ui";
+import { RootStore } from "../../mobx/store";
+import { StoreContext } from "../../context/store-context";
+import DefaultLayout from "../../layout/default";
 
-const AuthPage = () => {
+const SignUpPage = () => {
   const store = useContext<RootStore>(StoreContext);
+
   const username = useRef("");
+  const password = useRef("");
 
   const handleUsername = (event: ChangeEvent<HTMLInputElement>) => {
     username.current = event.currentTarget.value;
   };
 
+  const handlePassword = (event: ChangeEvent<HTMLInputElement>) => {
+    password.current = event.currentTarget.value;
+  };
+
   const handleSubmit = async () => {
-    const user: LoginDto = {
+    const user = {
       username: username.current,
-      password: "somePass",
+      password: password.current,
     };
 
-    store.auth.signIn(user);
+    await store.auth.signIn(user);
   };
 
   return (
     <DefaultLayout width={400}>
+      <Heading is={"h1"} size={800} marginBottom={8}>
+        Sign up
+      </Heading>
+
       <TextInputField
         label={"Username"}
         tabIndex={0}
@@ -32,10 +41,19 @@ const AuthPage = () => {
         onChange={handleUsername}
       />
 
+      <TextInputField
+        label={"Password"}
+        type={"password"}
+        tabIndex={1}
+        required={true}
+        placeholder={"*********"}
+        onChange={handlePassword}
+      />
+
       <Pane display={"flex"} flexDirection={"column"}>
         <Button
           type={"submit"}
-          tabIndex={1}
+          tabIndex={2}
           appearance={"primary"}
           size={"large"}
           onClick={handleSubmit}
@@ -47,4 +65,4 @@ const AuthPage = () => {
   );
 };
 
-export default AuthPage;
+export default SignUpPage;

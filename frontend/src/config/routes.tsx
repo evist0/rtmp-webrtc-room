@@ -1,9 +1,9 @@
 import React from "react";
 import { Route } from "mobx-router";
 import { RootStore } from "../mobx/store";
-import AuthPage from "../pages/auth";
 import CreateEventPage from "../pages/createEvent";
 import StudioPage from "../pages/studio";
+import authRoutes from "../pages/auth/routes";
 
 const routes = {
   index: new Route<RootStore>({
@@ -13,17 +13,6 @@ const routes = {
       return store.router.goTo(routes.studio).then(() => false);
     },
   }),
-  auth: new Route<RootStore>({
-    path: "/auth",
-    component: <AuthPage />,
-    beforeEnter: (route, params, store): void | Promise<boolean> | boolean => {
-      const isLoggedIn = store.auth.isLoggedIn;
-
-      if (isLoggedIn) {
-        return store.router.goTo(routes.studio).then(() => false);
-      }
-    },
-  }),
   createEvent: new Route<RootStore>({
     path: "/createEvent",
     component: <CreateEventPage />,
@@ -31,7 +20,7 @@ const routes = {
       const isLoggedIn = store.auth.isLoggedIn;
 
       if (!isLoggedIn) {
-        return store.router.goTo(routes.auth).then(() => false);
+        return store.router.goTo(authRoutes.signIn).then(() => false);
       }
 
       return true;
@@ -44,7 +33,7 @@ const routes = {
       const isLoggedIn = store.auth.isLoggedIn;
 
       if (!isLoggedIn) {
-        return store.router.goTo(routes.auth).then(() => false);
+        return store.router.goTo(authRoutes.signIn).then(() => false);
       }
 
       const eventInProgress = store.studio.roomId;
@@ -56,6 +45,7 @@ const routes = {
       return true;
     },
   }),
+  ...authRoutes,
 };
 
 export default routes;

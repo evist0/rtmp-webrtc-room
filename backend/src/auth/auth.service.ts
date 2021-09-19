@@ -17,7 +17,7 @@ export class AuthService {
     private readonly usersService: UsersService,
   ) {}
 
-  async register(registerUserDto: RegisterUserDto) {
+  async signUp(registerUserDto: RegisterUserDto) {
     const passwordHash = createHmac('sha256', jwtConstants.secret);
     passwordHash.update(registerUserDto.password);
 
@@ -30,13 +30,13 @@ export class AuthService {
     await createdEvent.save();
 
     return {
-      access_token: this.jwtService.sign({
+      accessToken: this.jwtService.sign({
         username: registerUserDto.username,
       }),
     };
   }
 
-  async login(loginUserDto: LoginUserDto) {
+  async signIn(loginUserDto: LoginUserDto) {
     const user = await this.usersService.findOne(loginUserDto.username, true);
 
     if (!user) {
@@ -51,7 +51,7 @@ export class AuthService {
     }
 
     return {
-      access_token: this.jwtService.sign({
+      accessToken: this.jwtService.sign({
         username: loginUserDto.username,
       }),
     };
